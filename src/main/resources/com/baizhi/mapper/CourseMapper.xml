@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.CourseDao">
+
+    <insert id="insert" parameterType="com.baizhi.entity.Course">
+        insert into cmfw_course values(#{id},#{title},#{marking},#{creatTime})
+    </insert>
+
+    <select id="queryPaging" resultType="com.baizhi.entity.Course">
+        select * from cmfw_course
+        limit #{start},#{rows}
+    </select>
+    <!--查询多少条数据-->
+    <select id="queryTotals" resultType="long">
+        select count(id) from cmfw_course
+
+    </select>
+
+    <delete id="deleteById" parameterType="com.baizhi.entity.Course">
+        delete from cmfw_course where id=#{id}
+    </delete>
+
+    <update id="update" parameterType="com.baizhi.entity.Course">
+        update cmfw_course set title=#{title},marking=#{marking},creatTime=#{creatTime}
+        where id=#{id}
+    </update>
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.ArticleDao">
+
+    <insert id="insert" parameterType="com.baizhi.entity.Article">
+        insert into cmfw_article values(#{id},#{title},#{imgPath},#{content},#{publishDate},#{w_id})
+    </insert>
+
+    <select id="queryPaging"  resultType="com.baizhi.entity.Article">
+        select *
+        from cmfw_article
+        limit #{start},#{rows}
+    </select>
+
+    <delete id="deleteById" parameterType="com.baizhi.entity.Article">
+        delete from cmfw_article where id=#{id}
+    </delete>
+
+    <update id="update" parameterType="com.baizhi.entity.Article">
+        update cmfw_article set title=#{title},imgPath=#{imgPath},content=#{content},publishDate=#{publishDate}
+        where id=#{id}
+    </update>
+
+    <select id="queryTotals"  resultType="long">
+        select count(id) from cmfw_article
+    </select>
+</mapper>

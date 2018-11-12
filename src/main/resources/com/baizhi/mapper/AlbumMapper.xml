@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.AlbumDao">
+<!--添加-->
+    <insert id="insert" parameterType="com.baizhi.entity.Album">
+        insert into cmfw_album
+        values(#{id},#{title},#{publishDate},#{count},#{coverImg},#{star},#{author},#{broadCast},#{brief})
+    </insert>
+
+
+<!--查询所有-->
+    <resultMap id="ac" type="com.baizhi.entity.Album">
+        <id property="id" column="id"></id>
+        <result property="title" column="title"></result>
+        <result property="publishDate" column="publishDate"></result>
+        <result property="count" column="count"></result>
+        <result property="coverImg" column="coverImg"></result>
+        <result property="star" column="star"></result>
+        <result property="author" column="author"></result>
+        <result property="broadCast" column="broadCast"></result>
+        <result property="brief" column="brief"></result>
+        <collection property="children" ofType="com.baizhi.entity.Chapter">
+            <id property="id" column="cid"></id>
+            <result property="title" column="ctitle"></result>
+            <result property="size" column="csize"></result>
+            <result property="duration" column="cduration"></result>
+            <result property="downPath" column="cdownPath"></result>
+            <result property="uploadTime" column="cuploadTime"></result>
+            <result property="w_id" column="cw_id"></result>
+        </collection>
+    </resultMap>
+    <!--分页：从第几页开始，每页展示条数-->
+    <select id="queryPaging" resultMap="ac">
+        select  ww.id,ww.title,ww.publishDate,ww.count,ww.coverImg,ww.star,ww.author,ww.broadCast,ww.brief,
+                ww.cid,ww.ctitle,ww.csize,ww.cduration,ww.cdownPath,ww.cuploadTime,ww.cw_id
+        from (select ca.id,ca.title,ca.publishDate,ca.count,ca.coverImg,ca.star,ca.author,ca.broadCast,ca.brief,
+               cc.id cid,cc.title ctitle,cc.size csize,cc.duration cduration,cc.downPath cdownPath,cc.uploadTime cuploadTime,cc.w_id cw_id
+              from cmfw_album ca left outer join cmfw_chapter cc
+              on ca.id=cc.w_id) ww
+
+        limit #{start},#{rows}
+    </select>
+    <!--查询多少条数据-->
+    <select id="queryTotals" resultType="long">
+        select count(id) from cmfw_album
+    </select>
+<!--删除-->
+    <delete id="deleteById" parameterType="com.baizhi.entity.Album">
+        delete from cmfw_album where id=#{id}
+    </delete>
+<!--修改-->
+    <update id="update" parameterType="com.baizhi.entity.Album">
+        update cmfw_album set title=#{title},publishDate=#{publishDate},count=#{count},coverImg=#{coverImg},star=#{star},author=#{author},broadCast=#{broadCast},brief=#{brief}
+        where id=#{id}
+    </update>
+</mapper>

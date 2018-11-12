@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.UserDao">
+
+    <insert id="insert" parameterType="com.baizhi.entity.User">
+        insert into cmfw_user values(#{id},#{phoneNum},#{username},#{password},#{salt},#{city},#{province},#{nickName},#{gender},#{headPic},#{status},#{sign},#{date})
+    </insert>
+
+    <resultMap id="u" type="com.baizhi.entity.User">
+        <id property="id" column="id"></id>
+        <result property="phoneNum" column="phoneNum"></result>
+        <result property="username" column="username"></result>
+        <result property="password" column="password"></result>
+        <result property="salt" column="salt"></result>
+        <result property="city" column="city"></result>
+        <result property="date" column="date"></result>
+        <result property="gender" column="gender"></result>
+        <result property="headPic" column="headPic"></result>
+        <result property="status" column="status"></result>
+        <result property="nickName" column="nickName"></result>
+        <result property="sign" column="sign"></result>
+        <collection property="courses" ofType="com.baizhi.entity.Course">
+            <id property="id" column="id2"></id>
+            <result property="title" column="title1"></result>
+            <result property="marking" column="marking"></result>
+            <result property="creatTime" column="creatTime"></result>
+        </collection>
+    </resultMap>
+    <select id="queryPaging" resultMap="u">
+        select u.id,u.phoneNum,u.username,u.password,u.salt,u.city,u.date,u.gender,u.headPic,u.status,u.nickName,u.sign,
+               u.id2,u.title,u.marking,u.creatTime
+        from (
+              select cu.id,cu.phoneNum,cu.username,cu.password,cu.salt,cu.city,cu.date,cu.gender,cu.headPic,cu.status,cu.nickName,cu.sign,
+                     cc.id,cc.count,cc.title,cc.recordDate,cc.course_id,cc.user_id,
+                     co.id,co.title,co.marking,co.creatTime
+              from cmfw_user cu left join cmfw_counter cc on cu.id=cc.user_id
+                   left join cmfw_course co on co.id=cc.course_id
+              ) u
+        limit #{start},#{rows}
+    </select>
+
+    <select id="queryById" parameterType="com.baizhi.entity.User" resultType="com.baizhi.entity.User">
+        select * from cmfw_user where phoneNum=#{phoneNum} and password=#{password}
+    </select>
+
+    <delete id="deleteById" parameterType="com.baizhi.entity.User">
+        delete from cmfw_user where id=#{id}
+    </delete>
+
+    <update id="update" parameterType="com.baizhi.entity.User">
+        update cmfw_user set phoneNum=#{phoneNum},username=#{username},password=#{password},salt=#{salt},city=#{city},date=#{date},gender=#{gender},headPic=#{headPic},status=#{status},nickName=#{nickName},sign=#{sign}
+        where id=#{id}
+    </update>
+</mapper>

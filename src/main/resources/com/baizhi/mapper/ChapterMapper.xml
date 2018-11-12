@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.ChapterDao">
+
+    <insert id="insert" parameterType="com.baizhi.entity.Chapter">
+        insert into cmfw_chapter
+        values(#{id},#{title},#{size},#{duration},#{downPath},#{uploadTime},#{w_id})
+
+    </insert>
+
+
+
+    <delete id="deleteById" parameterType="com.baizhi.entity.Chapter">
+        delete from cmfw_chapter where id=#{id}
+    </delete>
+
+    <update id="update" parameterType="com.baizhi.entity.Chapter">
+        update cmfw_chapter
+        set title=#{title},size=#{size},duration=#{duration},downPath=#{downPath},uploadTime=#{uploadTime}
+        where w_id=#{w_id}
+    </update>
+</mapper>

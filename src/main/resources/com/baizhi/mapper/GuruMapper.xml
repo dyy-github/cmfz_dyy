@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.GuruDao">
+
+    <insert id="insert" parameterType="com.baizhi.entity.Guru">
+        insert into cmfw_guru values(#{id},#{name},#{headPic},#{gender})
+    </insert>
+    
+    
+    <resultMap id="ga" type="com.baizhi.entity.Guru">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="headPic" column="headPic"></result>
+        <result property="gender" column="gender"></result>
+        <collection property="articles" ofType="com.baizhi.entity.Article">
+            <id property="id" column="aid"></id>
+            <result property="title" column="atitle"></result>
+            <result property="imgPath" column="aimgPath"></result>
+            <result property="content" column="acontent"></result>
+            <result property="publishDate" column="apublishDate"></result>
+        </collection>
+    </resultMap>
+    <select id="queryPaging" resultMap="ga">
+        select ga.id,ga.name,ga.headPic,ga.gender,
+               ga.aid,ga.atitle,ga.aimgPath,ga.acontent,ga.apublishDate
+        from (
+              select cg.id,cg.name,cg.headPic,cg.gender,
+                     ca.id aid,ca.title atitle,ca.imgPath aimgPath,ca.content acontent,ca.publishDate apublishDate
+              from cmfw_guru cg left outer join cmfw_article ca
+              on cg.id=ca.w_id
+              ) ga
+        limit #{start},#{rows}
+    </select>
+    <!--查询多少条数据-->
+    <select id="queryTotals" resultType="long">
+        select count(id) from cmfw_guru
+    </select>
+
+    <delete id="deleteById" parameterType="com.baizhi.entity.Guru">
+        delete from cmfw_guru where id=#{id}
+    </delete>
+
+    <update id="update" parameterType="com.baizhi.entity.Guru">
+        update cmfw_guru set name=#{name},headPic=#{headPic},gender=#{gender}
+        where id=#{id}
+    </update>
+</mapper>
